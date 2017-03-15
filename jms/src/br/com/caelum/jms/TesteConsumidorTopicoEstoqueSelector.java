@@ -9,10 +9,13 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
+import javax.jms.ObjectMessage;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 import javax.jms.Topic;
 import javax.naming.InitialContext;
+
+import br.com.caelum.modelo.Pedido;
 
 public class TesteConsumidorTopicoEstoqueSelector {
 	
@@ -29,14 +32,15 @@ public class TesteConsumidorTopicoEstoqueSelector {
 		
 		Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 		Topic topico = (Topic) context.lookup("loja");
-		MessageConsumer consumer = session.createDurableSubscriber(topico, "assinatura-selector","ebook = false or ebook is null or ebook = false",false);
+		MessageConsumer consumer = session.createDurableSubscriber(topico, "assinatura-selector","ebook = false or ebook is null",false);
 		
 		consumer.setMessageListener(new MessageListener() {
 			@Override
 			public void onMessage(Message message) {
-				TextMessage textMessage = (TextMessage) message;
+				ObjectMessage objectMessage = (ObjectMessage) message;
 				try {
-					System.out.println("RECEBENDO MENSAGEM: "+textMessage.getText());
+					Pedido pedido = (Pedido) objectMessage.getObject();
+					System.out.println("RECEBENDO MENSAGEM: "+pedido.toString());
 				} catch (JMSException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

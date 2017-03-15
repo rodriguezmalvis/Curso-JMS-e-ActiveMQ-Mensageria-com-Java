@@ -1,5 +1,6 @@
 package br.com.caelum.jms;
 
+import java.io.StringWriter;
 import java.util.Random;
 
 import javax.jms.Connection;
@@ -9,6 +10,10 @@ import javax.jms.Message;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
 import javax.naming.InitialContext;
+import javax.xml.bind.JAXB;
+
+import br.com.caelum.modelo.Pedido;
+import br.com.caelum.modelo.PedidoFactory;
 
 public class TesteProdutorTopico {
 
@@ -27,11 +32,17 @@ public class TesteProdutorTopico {
 		
 		MessageProducer messageProducer = session.createProducer(topico);
 		
-		for (int id = 0; id <= 0; id++) {
-			Message message = session.createTextMessage("<pedido><id>"+new Random().nextInt(1000000)+"</id></pedido>");
-			//message.setBooleanProperty("ebook", false);
-			messageProducer.send(message);
-		}
+		Pedido pedido = new PedidoFactory().geraPedidoComValores();
+		
+//		StringWriter stringWriter = new StringWriter();
+//		JAXB.marshal(pedido, stringWriter);
+//		String xml = stringWriter.toString();
+		
+//		Message message = session.createTextMessage(xml);
+		
+		Message message = session.createObjectMessage(pedido);
+		message.setBooleanProperty("ebook", false);
+		messageProducer.send(message);
 		
 		System.out.println("MENSAGENS ENVIADO!!");
 		
