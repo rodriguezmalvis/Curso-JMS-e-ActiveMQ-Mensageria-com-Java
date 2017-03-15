@@ -25,7 +25,7 @@ public class TesteConsumidorFila {
 		System.out.println("EXECUTANDO TESTE COMSUMIDOR -- APERTE QUALQUER TECLA PARA FINALIZAR...");
 		connection.start();
 		
-		Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+		Session session = connection.createSession(true, Session.SESSION_TRANSACTED);
 		Destination fila = (Destination) context.lookup("financeiro");
 		MessageConsumer consumer = session.createConsumer(fila);
 		
@@ -35,6 +35,8 @@ public class TesteConsumidorFila {
 				TextMessage textMessage = (TextMessage) message;
 				try {
 					System.out.println("RECEBENDO MENSAGEM: "+textMessage.getText());
+					session.commit();
+					//message.acknowledge();
 				} catch (JMSException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

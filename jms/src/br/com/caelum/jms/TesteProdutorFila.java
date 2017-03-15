@@ -25,7 +25,7 @@ public class TesteProdutorFila {
 		
 		MessageProducer messageProducer = session.createProducer(fila);
 		
-		for (int id = 0; id <= 1000; id++) {
+		for (int id = 0; id <= 0; id++) {
 			Message message = session.createTextMessage("<pedido><id>"+id+"</id></pedido>");
 			messageProducer.send(message);
 		}
